@@ -10,6 +10,7 @@
 <body>
     <textarea name="" id="tex" cols="30" rows="10"></textarea>
     <input type="button" value="envia" id="butt">
+    <input type="text" id="uname">
     <script src="/js/jquery.js"></script>
     <script>
         var websocket_server = 'ws://chat.1809a.com:9502';
@@ -18,9 +19,17 @@
         ws.onopen = function () {
             $('#butt').click(function (e) {
                 var tex = $('#tex').val();
+                var name = $('#uname').val();
+                if(name==''){
+                    alert('请输入个聊天名哦');
+                }
+                if(tex==''){
+                    alert('请输入聊天内容哦');
+                }
                 var data = {
                     type:'message',
-                    text:tex,
+                    content:tex,
+                    name:name,
                     date:Date.now()
                 }
                 ws.send(JSON.stringify(data));//转json字符串
@@ -30,7 +39,7 @@
         ws.onmessage = function (d) {
             //console.log(JSON.parse(d.data));
             var data=JSON.parse(d.data);
-            $('#tex').before(data.text+'-'+data.date+'<br>');
+            $('#tex').before(data.name+':'+data.content+'-'+data.date+'<br>');
             $('#tex').val('');
             //alert(d.data);
         }
